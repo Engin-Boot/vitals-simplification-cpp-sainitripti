@@ -16,6 +16,10 @@ bool vitalsAreOk(float bpm, float spo2, float respRate) {
 }
 
 int main() {
+  assert(vitalIsOk(80, 70, 150) == true);
+  assert(vitalIsOk(80, 90, 100) == false);
+  assert(vitalIsOk(100, 30, 95) == false);
+
   assert(vitalsAreOk(80, 95, 60) == true);
   assert(vitalsAreOk(60, 90, 40) == false);
 }

@@ -63,12 +63,8 @@ int main() {
   assert(vitalIsOk(alert, "SPO2", 80, 90, 100) == false);
   assert(vitalIsOk(alert, "Respiration Rate", 100, 30, 95) == false);
 
-  alert = new AlertInSMS();
-  
-  assert(vitalsAreOk(alert, 80, 95, 60) == true);
-  assert(vitalsAreOk(alert, 60, 90, 40) == false);
+  alert->sendAlert("BPM", "is high!");
 
-  assert(vitalIsOk(alert, "BPM", 80, 70, 150) == true);
-  assert(vitalIsOk(alert, "SPO2", 80, 90, 100) == false);
-  assert(vitalIsOk(alert, "Respiration Rate", 100, 30, 95) == false);
+  alert = new AlertInSMS();
+  alert->sendAlert("SPM", "is low!");
 }

@@ -78,16 +78,22 @@ int main() {
 
   int values[VITAL_LIST_SIZE] = {80, 95, 60};
 
-  vitalsAreOk(alert, values);
+  vitalsAreOk(alert, values);             // no alert
 
   values[BPM] = 60;
   values[SPO2] = 90;
   values[RESPRATE] = 40;
 
+  vitalsAreOk(alert, values);             // BPM low alert
+  
+  values[BPM] = 200;
+  values[SPO2] = 80;
+  values[RESPRATE] = 20;                  // BPM high, SPO2 low, RESRATE low alerts
+
   vitalsAreOk(alert, values);
 
   alert = new AlertInSound();
 
-  vitalIsOk(alert, vitals[BPM], 80);
-  vitalIsOk(alert, vitals[SPO2], 80);
+  vitalIsOk(alert, vitals[BPM], 80);      // no alert
+  vitalIsOk(alert, vitals[SPO2], 80);     // SPO2 low alert
 }

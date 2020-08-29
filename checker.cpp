@@ -88,7 +88,7 @@ int main() {
   
   values[BPM] = 200;
   values[SPO2] = 80;
-  values[RESPRATE] = 20;                  // BPM high, SPO2 low, RESRATE low alerts
+  values[RESPRATE] = 20;                  // BPM high, SPO2 low, RESPRATE low alerts
 
   vitalsAreOk(alert, values);
 

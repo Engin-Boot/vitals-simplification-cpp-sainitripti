@@ -16,7 +16,7 @@ class Vital
   int lowerLimit;
   int upperLimit;
 
-  Vital(const char* vitalName, int lowerLimit, int UpperLimit)
+  Vital(const char* vitalName, int lowerLimit, int upperLimit)
   {
     this->name = vitalName;
     this->lowerLimit = lowerLimit;
@@ -58,11 +58,11 @@ void vitalIsOk(Alert* alert, const Vital vital, float value)
 {
   if(value < vital.lowerLimit)
   {
-    alert->sendAlert(vital.name, "is low!");
+    alert->sendAlert(vital.name, " is low!");
   }
   else if(value > vital.upperLimit)
   {
-    alert->sendAlert(vital.name, "is high!");
+    alert->sendAlert(vital.name, " is high!");
   }
 }
 

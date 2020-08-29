@@ -1,9 +1,35 @@
 #include <assert.h>
 #include <iostream>
+#include <vector>
 
-const int bpmLimit[] = {70, 150};
-const int spo2Limit[] = {90, 100};
-const int respRateLimit[] = {30, 95};
+enum
+{
+  BPM,
+  SPO2,
+  RESPRATE,
+  VITAL_LIST_SIZE
+};
+
+class Vital
+{
+  public:
+  const char* name;
+  int lowerLimit;
+  int upperLimit;
+
+  Vital(const char* vitalName, int lowerLimit, int UpperLimit)
+  {
+    this->name = vitalName;
+    this->lowerLimit = lowerLimit;
+    this->upperLimit = upperLimit;
+  }
+};
+
+const Vital bpm("BPM", 70, 150);
+const Vital spo2("SP02", 90, 100);
+const Vital respRate("Respiration Rate", 30, 95);
+
+const Vital vitals[VITAL_LIST_SIZE] = {bpm, spo2, respRate};
 
 class Alert
 {
@@ -29,42 +55,40 @@ class AlertInSound: public Alert
     }
 };
 
-bool vitalIsOk(Alert* alert, const char* vitalName, float value, const int lowerLimit, const int upperLimit )
+void vitalIsOk(Alert* alert, const Vital vital, float value)
 {
-  if(value < lowerLimit)
+  if(value < vital.lowerLimit)
   {
-    alert->sendAlert(vitalName, "is low!");
-    return false;
+    alert->sendAlert(vital.name, "is low!");
   }
-  else if(value > upperLimit)
+  else if(value > vital.upperLimit)
   {
-    alert->sendAlert(vitalName, "is high!");
-    return false;
-  }
-  else
-  {
-    return true;
+    alert->sendAlert(vital.name, "is high!");
   }
 }
 
-bool vitalsAreOk(Alert* alert, float bpm, float spo2, float respRate) {
-  return (vitalIsOk(alert, "BPM", bpm, bpmLimit[0], bpmLimit[1]) 
-    && vitalIsOk(alert, "SPO2", spo2, spo2Limit[0], spo2Limit[1]) 
-    && vitalIsOk(alert, "Respiration Rate", respRate, respRateLimit[0], respRateLimit[1]));
+void vitalsAreOk(Alert* alert, const int* values) {
+  for(int vitalNum = 0; vitalNum < VITAL_LIST_SIZE; vitalNum++){
+    vitalIsOk(alert, vitals[vitalNum], values[vitalNum]);
+  }
 }
 
 int main() {
+
   Alert* alert = new AlertInSMS();
-  
-  assert(vitalsAreOk(alert, 80, 95, 60) == true);
-  assert(vitalsAreOk(alert, 60, 90, 40) == false);
 
-  assert(vitalIsOk(alert, "BPM", 80, 70, 150) == true);
-  assert(vitalIsOk(alert, "SPO2", 80, 90, 100) == false);
-  assert(vitalIsOk(alert, "Respiration Rate", 100, 30, 95) == false);
+  int values[VITAL_LIST_SIZE] = {80, 95, 60};
 
-  alert->sendAlert("BPM", "is high!");
+  vitalsAreOk(alert, values);
 
-  alert = new AlertInSMS();
-  alert->sendAlert("SPM", "is low!");
+  values[BPM] = 60;
+  values[SPO2] = 90;
+  values[RESPRATE] = 40;
+
+  vitalsAreOk(alert, values);
+
+  alert = new AlertInSound();
+
+  vitalIsOk(alert, vitals[BPM], 80);
+  vitalIsOk(alert, vitals[SPO2], 80);
 }
